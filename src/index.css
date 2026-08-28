@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+
+@theme {
+  --animate-hero-title: hero-title 0.9s ease-out;
+
+  @keyframes hero-title {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

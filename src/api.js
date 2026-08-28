@@ -1,5 +1,3 @@
-// Talks to the namy-backend server. Set VITE_API_BASE in your .env file
-// if the backend isn't running on the default http://localhost:4000.
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:4000/api';
 
 async function request(path, options = {}) {
@@ -40,4 +38,5 @@ export const api = {
   stats: resource('stats'),
   seminars: resource('seminars'),
   leadership: resource('leadership'),
+  projects: resource('projects'),
 };

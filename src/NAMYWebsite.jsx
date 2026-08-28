@@ -28,6 +28,9 @@ import {
   BookOpen,
   Award,
   PlayCircle,
+  Target,
+  Eye,
+  Flag,
 } from "lucide-react";
 
 import {
@@ -37,10 +40,15 @@ import {
   FaYoutube,
   FaXTwitter,
 } from "react-icons/fa6";
+import emailjs from "@emailjs/browser";
 
 import { api } from "./api";
-import image1 from "./assets/image4.png" 
-
+import image1 from "./assets/image9.png";
+import image2 from "./assets/image8.png";
+import image3 from "./assets/image5.png";
+import image4 from "./assets/image7.jpeg";
+import logo from "./assets/namy.png";
+import { IconWorld } from "@tabler/icons-react";
 /* ---------------------------------------------------------------------- */
 /*  DATA                                                                   */
 /* ---------------------------------------------------------------------- */
@@ -48,8 +56,9 @@ import image1 from "./assets/image4.png"
 const NAV_LINKS = [
   { label: "About", id: "about" },
   { label: "Leadership", id: "leadership" },
+  { label: "Vision & Mission", id: "vision" },
   { label: "Programs", id: "programs" },
-  { label: "Innovation Hub", id: "innovation" },
+  { label: "Nammy Labs", id: "innovation" },
   { label: "Seminars", id: "seminars" },
   { label: "Workshops", id: "workshops" },
   { label: "News", id: "news" },
@@ -178,7 +187,7 @@ const WHATSAPP_OPTIONS = [
     msg: "Hello NAMY, I have a question about an upcoming workshop.",
   },
   {
-    label: "Innovation Hub",
+    label: "Namy Labs",
     msg: "Hello NAMY, I want to know more about the Innovation Hub.",
   },
   {
@@ -186,6 +195,27 @@ const WHATSAPP_OPTIONS = [
     msg: "Hello NAMY, I would like to speak with the administration team.",
   },
   { label: "General Enquiry", msg: "Hello NAMY, I have a general enquiry." },
+];
+
+const heroSlides = [
+  {
+    image: image1,
+    title: "Empowering Youths.",
+    subtitle: "Strengthening Communities.",
+    color: "#F4B400",
+  },
+  {
+    image: image2,
+    title: "Building Leaders.",
+    subtitle: "Creating Opportunity.",
+    color: "#22C55E",
+  },
+  {
+    image: image3,
+    title: "Inspiring Innovation.",
+    subtitle: "Shaping Zambia's Future.",
+    color: "#38BDF8",
+  },
 ];
 
 /* ---------------------------------------------------------------------- */
@@ -400,6 +430,45 @@ export default function NAMYWebsite() {
   const [news, setNews] = useState([]);
   const [leadership, setLeadership] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const form = useRef();
+
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+
+  const serviceId = "service_7fz95rk"
+  const templateId = "template_unofpd3"
+  const publicKey = "9BWus3RBZ_7cu3h_J"
+
+  const sendEmail = async (e) => {
+    e.preventDefault();
+
+    setSending(true);
+    setSent(false);
+    setError("");
+
+    try {
+      await emailjs.sendForm(
+        serviceId,
+        templateId,
+        form.current,
+        {
+          publicKey: publicKey,
+        }
+      );
+
+      setSent(true);
+      e.target.reset();
+    } catch (error) {
+      console.error("Email failed:", error);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  };
 
   useEffect(() => {
     Promise.all([
@@ -408,13 +477,15 @@ export default function NAMYWebsite() {
       api.seminars.list(),
       api.news.list(),
       api.leadership.list(),
+      api.projects.list(),
     ])
-      .then(([s, w, sem, n, lead]) => {
+      .then(([s, w, sem, n, lead, proj]) => {
         if (s.length) setStats(s);
         setWorkshops(w);
         setSeminars(sem);
         setNews(n);
         setLeadership(lead);
+        setProjects(proj);
       })
       .catch(() => {
         // Backend unreachable — stats keeps its fallback; everything else
@@ -444,6 +515,16 @@ export default function NAMYWebsite() {
       .getElementById(id)
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const slide = heroSlides[currentSlide];
 
   const waLink = (msg) =>
     `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
@@ -550,8 +631,8 @@ export default function NAMYWebsite() {
             onClick={() => scrollToId("hero")}
             className="flex items-center gap-3 shrink-0"
           >
-            <span className="w-11 h-11 rounded-2xl namy-grad-bg flex items-center justify-center text-white namy-display font-bold text-lg">
-              N
+            <span className="w-15 h-11 ">
+              <img src={logo} alt="" />
             </span>
             <span className="text-left leading-tight">
               <span className="block namy-display font-bold text-base md:text-lg">
@@ -624,9 +705,9 @@ export default function NAMYWebsite() {
       >
         {/* Background image */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
           style={{
-            backgroundImage: `url(${image1})`,
+            backgroundImage: `url(${slide.image})`,
           }}
         />
 
@@ -638,11 +719,9 @@ export default function NAMYWebsite() {
 
         <div className="absolute bottom-0 right-0 w-[28rem] h-[28rem] rounded-full bg-[#F4B400]/20 blur-3xl namy-float" />
 
-        <DistrictNetwork
-          className="absolute right-0 top-10 w-[420px] opacity-30 hidden md:block"
-        />
+        <DistrictNetwork className="absolute right-0 top-10 w-[420px] opacity-30 hidden md:block" />
 
-        <div className="relative max-w-7xl mx-auto px-5 md:px-8">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8 mt-10">
           <Reveal>
             <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.18em] uppercase text-white/85 bg-white/10 namy-glass rounded-full px-4 py-2 mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-[#F4B400]" />{" "}
@@ -650,13 +729,13 @@ export default function NAMYWebsite() {
             </div>
           </Reveal>
           <Reveal delay={80}>
-            <h1 className="namy-display font-extrabold text-white leading-[1.04] text-4xl sm:text-5xl md:text-6xl lg:text-[4.4rem] max-w-4xl tracking-tight">
-              Empowering Youth.
-              <br />
-              Strengthening Communities.
-              <br />
-              Creating Opportunity.
-            </h1>
+            <div key={currentSlide} className="animate-hero-title">
+              <h1 className="namy-display font-extrabold text-white leading-[1.04] text-4xl sm:text-5xl md:text-6xl lg:text-[4.4rem] max-w-4xl tracking-tight">
+                {slide.title}
+                <br />
+                <span style={{ color: slide.color }}>{slide.subtitle}</span>
+              </h1>
+            </div>
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-7 text-white/85 text-base md:text-lg max-w-xl leading-relaxed">
@@ -666,7 +745,7 @@ export default function NAMYWebsite() {
             </p>
           </Reveal>
           <Reveal delay={240}>
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="mt-20 mb-30 flex flex-wrap gap-3">
               <button
                 onClick={() => scrollToId("contact")}
                 className="namy-btn-gold px-6 py-3.5 rounded-full text-sm font-semibold flex items-center gap-1.5"
@@ -693,18 +772,6 @@ export default function NAMYWebsite() {
               </button>
             </div>
           </Reveal>
-
-          <Reveal delay={320}>
-            <div className="mt-16 namy-glass bg-white/10 border border-white/20 rounded-2xl p-5 max-w-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#F4B400] flex items-center justify-center namy-display font-bold text-[#0F172A]">
-                15+
-              </div>
-              <p className="text-white/90 text-sm leading-snug">
-                Active district chapters carrying the movement into communities
-                across Zambia.
-              </p>
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -720,93 +787,291 @@ export default function NAMYWebsite() {
 
       {/* ---------------- ABOUT ---------------- */}
       <section id="about" className="py-24 md:py-32">
-        <div className="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-14 items-center">
-          <Reveal>
-            <SectionEyebrow>About NAMY</SectionEyebrow>
-            <h2 className="namy-display font-bold text-3xl md:text-[2.6rem] leading-tight tracking-tight mb-6">
-              A movement built by young people, for the communities they call
-              home.
-            </h2>
-            <p className="namy-muted leading-relaxed mb-6">
-              NAMY exists to close the gap between youth potential and youth
-              opportunity. We organise, train and fund young Zambians across
-              leadership, entrepreneurship, STEM and community development —
-              turning ambition into projects that outlast a single programme
-              cycle.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-5">
-              {[
-                {
-                  title: "Our Mission",
-                  text: "To empower young people through innovation, entrepreneurship, leadership development, skills training and community transformation.",
-                },
-                {
-                  title: "Our Vision",
-                  text: "A Zambia where every young person has the opportunity, skills and platform to create sustainable social and economic impact.",
-                },
-              ].map((b) => (
-                <div key={b.title} className="namy-surface rounded-2xl p-5">
-                  <h3
-                    className="namy-display font-semibold text-sm mb-2"
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* ================= IMAGE ================= */}
+            <Reveal>
+              <div className="relative">
+                {/* Main Image */}
+                <div className="relative h-[480px] md:h-[560px] rounded-3xl overflow-hidden">
+                  <img
+                    src={image4}
+                    alt="NAMY youth community"
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Subtle overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                </div>
+
+                {/* Founded Badge */}
+                <div
+                  className="
+              absolute
+              bottom-6
+              right-[-12px]
+              md:right-[-20px]
+              bg-white
+              rounded-2xl
+              shadow-xl
+              px-6
+              py-5
+              border
+              border-slate-100
+            "
+                >
+                  <div
+                    className="namy-display font-bold text-3xl"
                     style={{ color: "#0B4F8C" }}
                   >
-                    {b.title}
-                  </h3>
-                  <p className="namy-muted text-sm leading-relaxed">{b.text}</p>
+                    2019
+                  </div>
+
+                  <p className="text-xs text-slate-500 mt-1 max-w-[120px] leading-relaxed">
+                    Founded in Mwense, Luapula Province
+                  </p>
                 </div>
-              ))}
-            </div>
-            <button
-              onClick={() => scrollToId("contact")}
-              className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold"
-              style={{ color: "#2E8B57" }}
-            >
-              Read our full story <ChevronRight size={15} />
-            </button>
+              </div>
+            </Reveal>
+
+            {/* ================= CONTENT ================= */}
+            <Reveal delay={120}>
+              <div>
+                {/* Eyebrow */}
+                <SectionEyebrow>About NAMY</SectionEyebrow>
+
+                {/* Heading */}
+                <h2
+                  className="
+              namy-display
+              font-bold
+              text-3xl
+              sm:text-4xl
+              md:text-[2.8rem]
+              lg:text-[3.2rem]
+              leading-[1.08]
+              tracking-tight
+              mb-7
+            "
+                >
+                  A National Institution for
+                  <span className="block" style={{ color: "#0B4F8C" }}>
+                    Youth Development & Innovation
+                  </span>
+                </h2>
+
+                {/* Description */}
+                <div className="space-y-5">
+                  <p className="namy-muted leading-relaxed">
+                    The National Movement of Youths (NAMY) is a Zambian
+                    non-governmental organisation founded to bridge the gap
+                    between young people's potential and real-world opportunity.
+                    Operating across 15 districts, we deliver programmes in
+                    leadership, entrepreneurship, STEM, digital skills,
+                    agriculture, and community development.
+                  </p>
+
+                  <p className="namy-muted leading-relaxed">
+                    Anchored in Mwense, Luapula Province, NAMY works alongside
+                    government, development partners, and the private sector to
+                    build a Zambia where every young person can create
+                    sustainable social and economic impact.
+                  </p>
+                </div>
+
+                {/* ================= VALUES ================= */}
+                <div className="grid sm:grid-cols-2 gap-4 mt-8">
+                  {/* Impact Driven */}
+                  <div
+                    className="
+                namy-surface
+                rounded-2xl
+                p-5
+                border
+                border-slate-200/80
+                hover:-translate-y-1
+                transition-all
+                duration-300
+              "
+                  >
+                    <div className="text-xl mb-3">
+                      <Target size={20} style={{ color: "#0B4F8C" }} />
+                    </div>
+
+                    <h3 className="namy-display font-semibold text-sm mb-1">
+                      Impact-Driven
+                    </h3>
+
+                    <p className="namy-muted text-xs leading-relaxed">
+                      Every initiative is measured by real change in
+                      communities.
+                    </p>
+                  </div>
+
+                  {/* Inclusive */}
+                  <div
+                    className="
+                namy-surface
+                rounded-2xl
+                p-5
+                border
+                border-slate-200/80
+                hover:-translate-y-1
+                transition-all
+                duration-300
+              "
+                  >
+                    <div className="text-xl mb-3">
+                      <HeartHandshake size={20} style={{ color: "#0B4F8C" }} />
+                    </div>
+
+                    <h3 className="namy-display font-semibold text-sm mb-1">
+                      Inclusive
+                    </h3>
+
+                    <p className="namy-muted text-xs leading-relaxed">
+                      We reach across gender, geography, and socioeconomic
+                      lines.
+                    </p>
+                  </div>
+
+                  {/* Innovative */}
+                  <div
+                    className="
+                namy-surface
+                rounded-2xl
+                p-5
+                border
+                border-slate-200/80
+                hover:-translate-y-1
+                transition-all
+                duration-300
+              "
+                  >
+                    <div className="text-xl mb-3">
+                      <Lightbulb size={20} style={{ color: "#0B4F8C" }} />
+                    </div>
+
+                    <h3 className="namy-display font-semibold text-sm mb-1">
+                      Innovative
+                    </h3>
+
+                    <p className="namy-muted text-xs leading-relaxed">
+                      We champion local solutions built on technology and
+                      creativity.
+                    </p>
+                  </div>
+
+                  {/* Collaborative */}
+                  <div
+                    className="
+                namy-surface
+                rounded-2xl
+                p-5
+                border
+                border-slate-200/80
+                hover:-translate-y-1
+                transition-all
+                duration-300
+              "
+                  >
+                    <div className="text-xl mb-3">
+                      <Globe2 size={20} style={{ color: "#0B4F8C" }} />
+                    </div>
+
+                    <h3 className="namy-display font-semibold text-sm mb-1">
+                      Collaborative
+                    </h3>
+
+                    <p className="namy-muted text-xs leading-relaxed">
+                      Partnerships with government, NGOs, and the private sector
+                      amplify our reach.
+                    </p>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <button
+                  onClick={() => scrollToId("contact")}
+                  className="
+              mt-8
+              inline-flex
+              items-center
+              gap-2
+              px-6
+              py-3
+              rounded-lg
+              text-sm
+              font-semibold
+              text-white
+              bg-[#0B4F8C]
+              hover:bg-[#083D6D]
+              transition-colors
+            "
+                >
+                  Learn Our Story
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- VISION & MISSION ---------------- */}
+      <section id="vision" className="py-24 md:py-32">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
+          <Reveal className="max-w-2xl mx-auto text-center mb-14">
+            <SectionEyebrow>Our Purpose</SectionEyebrow>
+            <h2 className="namy-display font-bold text-3xl md:text-[2.6rem] tracking-tight">
+              Why we exist. What we're building toward.
+            </h2>
           </Reveal>
 
-          <Reveal delay={120}>
-            <div className="namy-surface rounded-3xl p-8 md:p-10">
-              <h3 className="namy-display font-semibold text-lg mb-6">
-                Core Values
-              </h3>
-              <ul className="space-y-4">
-                {[
-                  "Integrity in everything we build",
-                  "Innovation rooted in local realities",
-                  "Inclusion — no district left behind",
-                  "Accountability to members and partners",
-                  "Excellence as a standard, not a slogan",
-                ].map((v) => (
-                  <li key={v} className="flex items-start gap-3">
-                    <CheckCircle2
-                      size={18}
-                      className="mt-0.5 shrink-0"
-                      style={{ color: "#2E8B57" }}
-                    />
-                    <span className="text-sm leading-relaxed">{v}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="namy-border-t mt-7 pt-6 grid grid-cols-3 gap-4 text-center">
-                {[
-                  ["2019", "Founded"],
-                  ["15+", "Districts"],
-                  ["25+", "Partners"],
-                ].map(([n, l]) => (
-                  <div key={l}>
-                    <div
-                      className="namy-display font-bold text-xl"
-                      style={{ color: "#0B4F8C" }}
-                    >
-                      {n}
-                    </div>
-                    <div className="namy-muted text-xs mt-1">{l}</div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <Reveal>
+              <div className="namy-card namy-surface rounded-2xl overflow-hidden h-full flex flex-col">
+                <div className="h-1.5" style={{ backgroundColor: "#0B4F8C" }} />
+                <div className="p-8 flex flex-col flex-1">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
+                    style={{ backgroundColor: "rgba(11,79,140,0.1)" }}
+                  >
+                    <Eye size={22} style={{ color: "#0B4F8C" }} />
                   </div>
-                ))}
+                  <h3 className="namy-underline namy-display font-semibold text-xl mb-4 inline-block">
+                    Our Vision
+                  </h3>
+                  <p className="namy-muted leading-relaxed">
+                    A society where every individual has access to skills,
+                    resources, and opportunities to reach their full potential.
+                  </p>
+                </div>
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <div className="namy-card namy-surface rounded-2xl overflow-hidden h-full flex flex-col">
+                <div className="h-1.5" style={{ backgroundColor: "#2E8B57" }} />
+                <div className="p-8 flex flex-col flex-1">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
+                    style={{ backgroundColor: "rgba(46,139,87,0.1)" }}
+                  >
+                    <Flag size={22} style={{ color: "#2E8B57" }} />
+                  </div>
+                  <h3 className="namy-underline namy-display font-semibold text-xl mb-4 inline-block">
+                    Our Mission
+                  </h3>
+                  <p className="namy-muted leading-relaxed">
+                    To empower individuals, advocate for social change, and
+                    eradicate poverty through community engagement, skills
+                    training, and resource provision.
+                  </p>
+                </div>
+              </div>
+            </Reveal>
+          </div>
         </div>
       </section>
 
@@ -915,7 +1180,7 @@ export default function NAMYWebsite() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
             <div>
-              <SectionEyebrow>Innovation Hub</SectionEyebrow>
+              <SectionEyebrow>Namy Labs</SectionEyebrow>
               <h2 className="namy-display font-bold text-3xl md:text-[2.6rem] tracking-tight max-w-xl">
                 From district workshops to working prototypes.
               </h2>
@@ -929,7 +1194,7 @@ export default function NAMYWebsite() {
           </Reveal>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {INNOVATIONS.map((inn, i) => (
+            {projects.map((inn, i) => (
               <Reveal key={inn.name} delay={i * 100}>
                 <div className="namy-card namy-surface rounded-2xl overflow-hidden h-full flex flex-col">
                   <div className="h-40 namy-grad-bg relative flex items-end p-5">
@@ -1054,9 +1319,16 @@ export default function NAMYWebsite() {
                       >
                         {sem.seats} seats left
                       </span>
-                      <button className="namy-btn-primary px-4 py-2 rounded-full text-xs font-semibold">
+                      <a
+                        href={waLink(
+                          `Hello NAMY, I want to register for the seminar: ${sem.title}`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="namy-btn-primary px-4 py-2 rounded-full text-xs font-semibold"
+                      >
                         Register
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </Reveal>
@@ -1123,9 +1395,16 @@ export default function NAMYWebsite() {
                       >
                         {w.seats} seats left
                       </span>
-                      <button className="namy-btn-primary px-4 py-2 rounded-full text-xs font-semibold">
+                      <a
+                        href={waLink(
+                          `Hello NAMY, I want to register for the workshop: ${w.title}`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="namy-btn-primary px-4 py-2 rounded-full text-xs font-semibold"
+                      >
                         Register
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </Reveal>
@@ -1309,32 +1588,37 @@ export default function NAMYWebsite() {
 
           <Reveal delay={120}>
             <div className="namy-surface rounded-3xl p-8">
-              <div className="space-y-4">
+              <form ref={form} onSubmit={sendEmail} className="space-y-4">
                 <input
+                  type="text"
+                  name="name"
                   placeholder="Full name"
+                  required
                   className="w-full namy-surface-2 rounded-xl px-4 py-3 text-sm outline-none border"
                   style={{ borderColor: "var(--namy-border)" }}
                 />
+
                 <input
+                  type="email"
+                  name="email"
                   placeholder="Email address"
+                  required
                   className="w-full namy-surface-2 rounded-xl px-4 py-3 text-sm outline-none border"
                   style={{ borderColor: "var(--namy-border)" }}
                 />
+
                 <textarea
+                  name="message"
                   placeholder="How can we help?"
                   rows={4}
+                  required
                   className="w-full namy-surface-2 rounded-xl px-4 py-3 text-sm outline-none border resize-none"
                   style={{ borderColor: "var(--namy-border)" }}
                 />
-                {!subscribed ? (
-                  <button
-                    type="button"
-                    onClick={() => setSubscribed(true)}
-                    className="namy-btn-primary w-full py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
-                  >
-                    Send Message <Send size={15} />
-                  </button>
-                ) : (
+
+                {error && <p className="text-sm text-red-600">{error}</p>}
+
+                {sent && (
                   <div
                     className="w-full py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
                     style={{
@@ -1342,10 +1626,26 @@ export default function NAMYWebsite() {
                       color: "#2E8B57",
                     }}
                   >
-                    <CheckCircle2 size={16} /> Message sent — we'll be in touch.
+                    <CheckCircle2 size={16} />
+                    Message sent — we'll be in touch.
                   </div>
                 )}
-              </div>
+
+                <button
+                  type="submit"
+                  disabled={sending}
+                  className="namy-btn-primary w-full py-3.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {sending ? (
+                    "Sending..."
+                  ) : (
+                    <>
+                      Send Message
+                      <Send size={15} />
+                    </>
+                  )}
+                </button>
+              </form>
             </div>
           </Reveal>
         </div>
@@ -1461,7 +1761,7 @@ export default function NAMYWebsite() {
           {waOpen ? (
             <X size={22} color="#fff" />
           ) : (
-            <MessageCircle size={24} color="#fff" />
+            <FaWhatsapp size={24} color="#fff" />
           )}
         </button>
       </div>
