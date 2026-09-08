@@ -142,39 +142,11 @@ const PROGRAMS = [
   },
 ];
 
-const INNOVATIONS = [
-  {
-    name: "Fish Feed Saver",
-    problem: "High feed wastage for small-scale fish farmers",
-    tech: "IoT + Automated Dispensing",
-    trl: "TRL 6",
-    status: "Piloting",
-    sdgs: ["SDG 2", "SDG 9"],
-  },
-  {
-    name: "Smart Water Controller",
-    problem: "Inefficient irrigation on smallholder farms",
-    tech: "IoT Sensors + Mobile App",
-    trl: "TRL 5",
-    status: "Prototype",
-    sdgs: ["SDG 6", "SDG 13"],
-  },
-  {
-    name: "Cold Chain Monitor",
-    problem: "Spoilage of perishable goods in transit",
-    tech: "GPS + Temperature Logging",
-    trl: "TRL 4",
-    status: "R&D",
-    sdgs: ["SDG 9", "SDG 12"],
-  },
-];
 
 const PARTNERS = [
   ged,
   nydc
 ];
-
-const API_URL = "http://localhost:4000";
 
 const WHATSAPP_NUMBER = "260970115956";
 const WHATSAPP_OPTIONS = [
@@ -471,6 +443,13 @@ export default function NAMYWebsite() {
     }
   };
 
+  useEffect(() => {
+    heroSlides.forEach((slide) => {
+      const img = new Image();
+      img.src = slide.image;
+    });
+  }, []);
+  
   useEffect(() => {
     Promise.all([
       api.stats.list(),
