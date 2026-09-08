@@ -48,6 +48,9 @@ import image2 from "./assets/image8.png";
 import image3 from "./assets/image5.png";
 import image4 from "./assets/image7.jpeg";
 import logo from "./assets/namy.png";
+import ged from "./assets/gedzam.png";
+import nydc from "./assets/nydc.jpg"
+import namylabs from "./assets/namylabs.png"
 import { IconWorld } from "@tabler/icons-react";
 /* ---------------------------------------------------------------------- */
 /*  DATA                                                                   */
@@ -58,7 +61,7 @@ const NAV_LINKS = [
   { label: "Leadership", id: "leadership" },
   { label: "Vision & Mission", id: "vision" },
   { label: "Programs", id: "programs" },
-  { label: "Nammy Labs", id: "innovation" },
+  { label: "Namy Labs", id: "innovation" },
   { label: "Seminars", id: "seminars" },
   { label: "Workshops", id: "workshops" },
   { label: "News", id: "news" },
@@ -167,13 +170,11 @@ const INNOVATIONS = [
 ];
 
 const PARTNERS = [
-  "UNDP Zambia",
-  "GIZ",
-  "USAID",
-  "Min. of Youth, Sport & Arts",
-  "Zambia Development Agency",
-  "Standard Chartered Foundation",
+  ged,
+  nydc
 ];
+
+const API_URL = "http://localhost:4000";
 
 const WHATSAPP_NUMBER = "260970115956";
 const WHATSAPP_OPTIONS = [
@@ -199,7 +200,7 @@ const WHATSAPP_OPTIONS = [
 
 const heroSlides = [
   {
-    image: image1,
+    image: image3,
     title: "Empowering Youths.",
     subtitle: "Strengthening Communities.",
     color: "#F4B400",
@@ -211,7 +212,7 @@ const heroSlides = [
     color: "#22C55E",
   },
   {
-    image: image3,
+    image: image1,
     title: "Inspiring Innovation.",
     subtitle: "Shaping Zambia's Future.",
     color: "#38BDF8",
@@ -657,7 +658,7 @@ export default function NAMYWebsite() {
             ))}
           </nav>
 
-          <div className="hidden lg:flex items-center gap-3">
+          {/* <div className="hidden lg:flex items-center gap-3">
             <button
               onClick={() => setDark((d) => !d)}
               aria-label="Toggle dark mode"
@@ -665,7 +666,7 @@ export default function NAMYWebsite() {
             >
               {dark ? <Sun size={17} /> : <Moon size={17} />}
             </button>
-          </div>
+          </div> */}
 
           <div className="flex items-center gap-2 lg:hidden">
             <button
@@ -1104,7 +1105,7 @@ export default function NAMYWebsite() {
                     <div className="w-20 h-20 rounded-full mx-auto mb-4 overflow-hidden namy-surface-2 flex items-center justify-center">
                       {leader.photoUrl ? (
                         <img
-                          src={leader.photoUrl}
+                        src={leader.photoUrl}
                           alt={leader.name}
                           className="w-full h-full object-cover"
                         />
@@ -1180,7 +1181,20 @@ export default function NAMYWebsite() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
             <div>
-              <SectionEyebrow>Namy Labs</SectionEyebrow>
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src={namylabs}
+                alt="NAMY"
+                className="w-10 h-10 md:w-20 md:h-12 object-contain"
+              />
+
+              <span
+                className="namy-display font-bold text-md md:text-xl tracking-[0.12em] uppercase"
+                style={{ color: "#0B4F8C" }}
+              >
+                NAMY LABS
+              </span>
+            </div>
               <h2 className="namy-display font-bold text-3xl md:text-[2.6rem] tracking-tight max-w-xl">
                 From district workshops to working prototypes.
               </h2>
@@ -1194,68 +1208,63 @@ export default function NAMYWebsite() {
           </Reveal>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {projects.map((inn, i) => (
-              <Reveal key={inn.name} delay={i * 100}>
-                <div className="namy-card namy-surface rounded-2xl overflow-hidden h-full flex flex-col">
-                  <div className="h-40 namy-grad-bg relative flex items-end p-5">
-                    <span className="namy-glass bg-white/15 text-white text-[11px] font-semibold px-3 py-1 rounded-full">
-                      {inn.status}
-                    </span>
-                  </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <h3 className="namy-display font-semibold text-base mb-2">
-                      {inn.name}
-                    </h3>
-                    <p className="namy-muted text-sm leading-relaxed mb-4">
-                      {inn.problem}
-                    </p>
-                    <div className="text-xs namy-muted mb-1">
-                      <span
-                        className="font-semibold"
-                        style={{ color: "var(--namy-text)" }}
-                      >
-                        Tech:{" "}
+            {loading ? (
+              <LoadingRow />
+            ) : projects.length === 0 ? (
+              <EmptyState message="Projects will appear here once they're added in the admin panel." />
+            ) : (
+              projects.map((proj, i) => (
+                <Reveal key={proj.id ?? proj.title} delay={i * 100}>
+                  <div className="namy-card namy-surface rounded-2xl overflow-hidden h-full flex flex-col">
+                    <div
+                      className="h-40 relative flex items-end p-5"
+                      style={
+                        proj.imageUrl
+                          ? {
+                              backgroundImage: `url(${proj.imageUrl})`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                            }
+                          : {}
+                      }
+                    >
+                      {!proj.imageUrl && (
+                        <div className="absolute inset-0 namy-grad-bg" />
+                      )}
+                      <span className="relative namy-glass bg-white/15 text-white text-[11px] font-semibold px-3 py-1 rounded-full">
+                        {proj.status}
                       </span>
-                      {inn.tech}
                     </div>
-                    <div className="text-xs namy-muted mb-4">
-                      <span
-                        className="font-semibold"
-                        style={{ color: "var(--namy-text)" }}
-                      >
-                        Level:{" "}
-                      </span>
-                      {inn.trl}
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {inn.sdgs.map((s) => (
-                        <span
-                          key={s}
-                          className="text-[11px] font-medium px-2.5 py-1 rounded-full"
-                          style={{
-                            backgroundColor: "rgba(46,139,87,0.12)",
-                            color: "#2E8B57",
-                          }}
+                    <div className="p-6 flex flex-col flex-1">
+                      <h3 className="namy-display font-semibold text-base mb-2">
+                        {proj.title}
+                      </h3>
+                      {proj.location && (
+                        <div className="flex items-center gap-2 text-xs namy-muted mb-3">
+                          <MapPin size={13} /> {proj.location}
+                        </div>
+                      )}
+                      {proj.description && (
+                        <p className="namy-muted text-sm leading-relaxed">
+                          {proj.description}
+                        </p>
+                      )}
+                      {proj.link && (
+                        <a
+                          href={proj.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-4 inline-flex items-center gap-1 text-sm font-semibold"
+                          style={{ color: "#0B4F8C" }}
                         >
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="mt-auto flex gap-3 text-sm font-semibold">
-                      <button
-                        className="flex items-center gap-1"
-                        style={{ color: "#0B4F8C" }}
-                      >
-                        View Prototype <ChevronRight size={14} />
-                      </button>
-                      <button className="flex items-center gap-1 namy-muted">
-                        <Download size={13} /> PDF
-                      </button>
+                          Learn More <ArrowUpRight size={14} />
+                        </a>
+                      )}
                     </div>
                   </div>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -1472,7 +1481,7 @@ export default function NAMYWebsite() {
                 key={p}
                 className="namy-display font-semibold text-sm md:text-base namy-muted opacity-80"
               >
-                {p}
+                <img src={p} alt="" className="w-20 h-10 md:w-80 md:h-40 object-contain" />
               </span>
             ))}
           </div>
@@ -1524,10 +1533,10 @@ export default function NAMYWebsite() {
             <div className="space-y-5">
               {[
                 { icon: Mail, label: "info@namy.org.zm" },
-                { icon: Phone, label: "+260 97 011 5956 /  +260 76 794 3209" },
+                { icon: Phone, label: "+260 97 072 7200 / +260 97 011 5956" },
                 {
                   icon: MapPin,
-                  label: "Plot 14, Independence Avenue, Lusaka, Zambia",
+                  label: "Mwense, Luapula Province, Zambia",
                 },
               ].map((c) => (
                 <div key={c.label} className="flex items-center gap-4">
@@ -1656,9 +1665,9 @@ export default function NAMYWebsite() {
         <div className="max-w-7xl mx-auto px-5 md:px-8 grid md:grid-cols-4 gap-10 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-10 h-10 rounded-xl namy-grad-bg flex items-center justify-center text-white namy-display font-bold">
-                N
-              </span>
+            <span className="w-15 h-11 ">
+              <img src={logo} alt="" />
+            </span>
               <span className="namy-display font-bold">NAMY</span>
             </div>
             <p className="namy-muted text-sm leading-relaxed">
