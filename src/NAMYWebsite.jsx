@@ -405,7 +405,7 @@ export default function NAMYWebsite() {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  
   const form = useRef();
 
   const [sending, setSending] = useState(false);
@@ -449,7 +449,7 @@ export default function NAMYWebsite() {
       img.src = slide.image;
     });
   }, []);
-  
+
   useEffect(() => {
     Promise.all([
       api.stats.list(),
@@ -684,12 +684,19 @@ export default function NAMYWebsite() {
         className="relative overflow-hidden pt-40 pb-28 md:pt-48 md:pb-36"
       >
         {/* Background image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
-          style={{
-            backgroundImage: `url(${slide.image})`,
-          }}
-        />
+        <div className="absolute inset-0">
+  {heroSlides.map((item, index) => (
+    <div
+      key={item.image}
+      className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+        index === currentSlide ? "opacity-100" : "opacity-0"
+      }`}
+      style={{
+        backgroundImage: `url(${item.image})`,
+      }}
+    />
+  ))}
+</div>
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 namy-grad-bg opacity-70" />
