@@ -43,14 +43,14 @@ import {
 import emailjs from "@emailjs/browser";
 
 import { api } from "./api";
-import image1 from "./assets/image9.png";
-import image2 from "./assets/image8.png";
-import image3 from "./assets/image5.png";
-import image4 from "./assets/image7.jpeg";
-import logo from "./assets/namy.png";
+import image1 from "./assets/image1.webp";
+import image2 from "./assets/image2.webp";
+import image3 from "./assets/image3.webp";
+import image4 from "./assets/about.webp";
+import logo from "./assets/namy.webp";
 import ged from "./assets/gedzam.png";
 import nydc from "./assets/nydc.jpg"
-import namylabs from "./assets/namylabs.png"
+import namylabs from "./assets/namylabs.webp"
 import { IconWorld } from "@tabler/icons-react";
 /* ---------------------------------------------------------------------- */
 /*  DATA                                                                   */
