@@ -49,8 +49,8 @@ import image3 from "./assets/image3.webp";
 import image4 from "./assets/about.webp";
 import logo from "./assets/namy.webp";
 import ged from "./assets/gedzam.png";
-import nydc from "./assets/nydc.jpg"
-import namylabs from "./assets/namylabs.webp"
+import nydc from "./assets/nydc.jpg";
+import namylabs from "./assets/namylabs.webp";
 import { IconWorld } from "@tabler/icons-react";
 /* ---------------------------------------------------------------------- */
 /*  DATA                                                                   */
@@ -142,11 +142,7 @@ const PROGRAMS = [
   },
 ];
 
-
-const PARTNERS = [
-  ged,
-  nydc
-];
+const PARTNERS = [ged, nydc];
 
 const WHATSAPP_NUMBER = "260970115956";
 const WHATSAPP_OPTIONS = [
@@ -405,16 +401,16 @@ export default function NAMYWebsite() {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+
   const form = useRef();
 
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
 
-  const serviceId = "service_7fz95rk"
-  const templateId = "template_unofpd3"
-  const publicKey = "9BWus3RBZ_7cu3h_J"
+  const serviceId = "service_7fz95rk";
+  const templateId = "template_unofpd3";
+  const publicKey = "9BWus3RBZ_7cu3h_J";
 
   const sendEmail = async (e) => {
     e.preventDefault();
@@ -424,14 +420,9 @@ export default function NAMYWebsite() {
     setError("");
 
     try {
-      await emailjs.sendForm(
-        serviceId,
-        templateId,
-        form.current,
-        {
-          publicKey: publicKey,
-        }
-      );
+      await emailjs.sendForm(serviceId, templateId, form.current, {
+        publicKey: publicKey,
+      });
 
       setSent(true);
       e.target.reset();
@@ -444,10 +435,21 @@ export default function NAMYWebsite() {
   };
 
   useEffect(() => {
-    heroSlides.forEach((slide) => {
-      const img = new Image();
-      img.src = slide.image;
-    });
+    const first = new Image();
+    first.src = heroSlides[0].image;
+
+    const preloadRemaining = () => {
+      heroSlides.slice(1).forEach((s) => {
+        const img = new Image();
+        img.src = s.image;
+      });
+    };
+
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(preloadRemaining);
+    } else {
+      setTimeout(preloadRemaining, 1500);
+    }
   }, []);
 
   useEffect(() => {
@@ -685,18 +687,21 @@ export default function NAMYWebsite() {
       >
         {/* Background image */}
         <div className="absolute inset-0">
-  {heroSlides.map((item, index) => (
-    <div
-      key={item.image}
-      className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
-        index === currentSlide ? "opacity-100" : "opacity-0"
-      }`}
-      style={{
-        backgroundImage: `url(${item.image})`,
-      }}
-    />
-  ))}
-</div>
+          {heroSlides.map((item, index) => (
+            <img
+              key={item.image}
+              src={item.image}
+              alt=""
+              aria-hidden="true"
+              className={`namy-hero-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "auto"}
+              decoding="async"
+            />
+          ))}
+        </div>
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 namy-grad-bg opacity-70" />
@@ -1091,7 +1096,7 @@ export default function NAMYWebsite() {
                     <div className="w-20 h-20 rounded-full mx-auto mb-4 overflow-hidden namy-surface-2 flex items-center justify-center">
                       {leader.photoUrl ? (
                         <img
-                        src={leader.photoUrl}
+                          src={leader.photoUrl}
                           alt={leader.name}
                           className="w-full h-full object-cover"
                         />
@@ -1167,20 +1172,20 @@ export default function NAMYWebsite() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
             <div>
-            <div className="flex items-center gap-3 mb-4">
-              <img
-                src={namylabs}
-                alt="NAMY"
-                className="w-10 h-10 md:w-20 md:h-12 object-contain"
-              />
+              <div className="flex items-center gap-3 mb-4">
+                <img
+                  src={namylabs}
+                  alt="NAMY"
+                  className="w-10 h-10 md:w-20 md:h-12 object-contain"
+                />
 
-              <span
-                className="namy-display font-bold text-md md:text-xl tracking-[0.12em] uppercase"
-                style={{ color: "#0B4F8C" }}
-              >
-                NAMY LABS
-              </span>
-            </div>
+                <span
+                  className="namy-display font-bold text-md md:text-xl tracking-[0.12em] uppercase"
+                  style={{ color: "#0B4F8C" }}
+                >
+                  NAMY LABS
+                </span>
+              </div>
               <h2 className="namy-display font-bold text-3xl md:text-[2.6rem] tracking-tight max-w-xl">
                 From district workshops to working prototypes.
               </h2>
@@ -1467,7 +1472,11 @@ export default function NAMYWebsite() {
                 key={p}
                 className="namy-display font-semibold text-sm md:text-base namy-muted opacity-80"
               >
-                <img src={p} alt="" className="w-20 h-10 md:w-80 md:h-40 object-contain" />
+                <img
+                  src={p}
+                  alt=""
+                  className="w-20 h-10 md:w-80 md:h-40 object-contain"
+                />
               </span>
             ))}
           </div>
@@ -1651,9 +1660,9 @@ export default function NAMYWebsite() {
         <div className="max-w-7xl mx-auto px-5 md:px-8 grid md:grid-cols-4 gap-10 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-4">
-            <span className="w-15 h-11 ">
-              <img src={logo} alt="" />
-            </span>
+              <span className="w-15 h-11 ">
+                <img src={logo} alt="" />
+              </span>
               <span className="namy-display font-bold">NAMY</span>
             </div>
             <p className="namy-muted text-sm leading-relaxed">
