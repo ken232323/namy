@@ -1545,7 +1545,7 @@ export default function NAMYWebsite() {
             </p>
             <div className="space-y-5">
               {[
-                { icon: Mail, label: "info@namy.org.zm" },
+                { icon: Mail, label: "info@namyzambia.org" },
                 { icon: Phone, label: "+260 97 072 7200 / +260 97 011 5956" },
                 {
                   icon: MapPin,
