@@ -408,27 +408,45 @@ export default function NAMYWebsite() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
 
-  const serviceId = "service_7fz95rk";
-  const templateId = "template_unofpd3";
-  const publicKey = "9BWus3RBZ_7cu3h_J";
 
-  const sendEmail = async (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
-
+  
     setSending(true);
     setSent(false);
     setError("");
-
+  
+    const formData = new FormData(e.target);
+  
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+    };
+  
     try {
-      await emailjs.sendForm(serviceId, templateId, form.current, {
-        publicKey: publicKey,
-      });
-
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE}/api/contact`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+  
+      const result = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to send message.");
+      }
+  
       setSent(true);
       e.target.reset();
-    } catch (error) {
-      console.error("Email failed:", error);
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Something went wrong.");
     } finally {
       setSending(false);
     }
@@ -1592,7 +1610,7 @@ export default function NAMYWebsite() {
 
           <Reveal delay={120}>
             <div className="namy-surface rounded-3xl p-8">
-              <form ref={form} onSubmit={sendEmail} className="space-y-4">
+             <form onSubmit={sendMessage} className="space-y-4">
                 <input
                   type="text"
                   name="name"
