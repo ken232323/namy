@@ -426,7 +426,7 @@ export default function NAMYWebsite() {
   
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE}/api/contact`,
+        `${import.meta.env.VITE_API_BASE}/contact`,
         {
           method: "POST",
           headers: {
