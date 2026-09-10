@@ -47,6 +47,9 @@ import image1 from "./assets/image1.webp";
 import image2 from "./assets/image2.webp";
 import image3 from "./assets/image3.webp";
 import image4 from "./assets/about.webp";
+import image1Mobile from "./assets/mobileimage3.webp";
+import image2Mobile from "./assets/mobileimage2.webp";
+import image3Mobile from "./assets/mobileimage1.webp";
 import logo from "./assets/namy.webp";
 import ged from "./assets/gedzam.png";
 import nydc from "./assets/nydc.jpg";
@@ -169,18 +172,21 @@ const WHATSAPP_OPTIONS = [
 const heroSlides = [
   {
     image: image3,
+    mobileImage: image3Mobile,
     title: "Empowering Youths.",
     subtitle: "Strengthening Communities.",
     color: "#F4B400",
   },
   {
     image: image2,
+    mobileImage: image2Mobile,
     title: "Building Leaders.",
     subtitle: "Creating Opportunity.",
     color: "#22C55E",
   },
   {
     image: image1,
+    mobileImage: image1Mobile,
     title: "Inspiring Innovation.",
     subtitle: "Shaping Zambia's Future.",
     color: "#38BDF8",
@@ -453,16 +459,19 @@ export default function NAMYWebsite() {
   };
 
   useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const getSrc = (s) => (isMobile ? s.mobileImage : s.image);
+  
     const first = new Image();
-    first.src = heroSlides[0].image;
-
+    first.src = getSrc(heroSlides[0]);
+  
     const preloadRemaining = () => {
       heroSlides.slice(1).forEach((s) => {
         const img = new Image();
-        img.src = s.image;
+        img.src = getSrc(s);
       });
     };
-
+  
     if ("requestIdleCallback" in window) {
       window.requestIdleCallback(preloadRemaining);
     } else {
@@ -704,22 +713,24 @@ export default function NAMYWebsite() {
         className="relative overflow-hidden pt-40 pb-28 md:pt-48 md:pb-36"
       >
         {/* Background image */}
-        <div className="absolute inset-0">
-          {heroSlides.map((item, index) => (
-            <img
-              key={item.image}
-              src={item.image}
-              alt=""
-              aria-hidden="true"
-              className={`namy-hero-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                index === currentSlide ? "opacity-100" : "opacity-0"
-              }`}
-              loading={index === 0 ? "eager" : "lazy"}
-              fetchPriority={index === 0 ? "high" : "auto"}
-              decoding="async"
-            />
-          ))}
-        </div>
+<div className="absolute inset-0">
+  {heroSlides.map((item, index) => (
+    <picture key={item.image}>
+      <source media="(max-width: 767px)" srcSet={item.mobileImage} />
+      <img
+        src={item.image}
+        alt=""
+        aria-hidden="true"
+        className={`namy-hero-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+          index === currentSlide ? "opacity-100" : "opacity-0"
+        }`}
+        loading={index === 0 ? "eager" : "lazy"}
+        fetchPriority={index === 0 ? "high" : "auto"}
+        decoding="async"
+      />
+    </picture>
+  ))}
+</div>
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 namy-grad-bg opacity-70" />
