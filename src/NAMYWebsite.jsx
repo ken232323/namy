@@ -414,40 +414,36 @@ export default function NAMYWebsite() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
 
-
   const sendMessage = async (e) => {
     e.preventDefault();
-  
+
     setSending(true);
     setSent(false);
     setError("");
-  
+
     const formData = new FormData(e.target);
-  
+
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
       message: formData.get("message"),
     };
-  
+
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE}/contact`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-  
+      const response = await fetch(`${import.meta.env.VITE_API_BASE}/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
       const result = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(result.error || "Failed to send message.");
       }
-  
+
       setSent(true);
       e.target.reset();
     } catch (err) {
@@ -461,17 +457,17 @@ export default function NAMYWebsite() {
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const getSrc = (s) => (isMobile ? s.mobileImage : s.image);
-  
+
     const first = new Image();
     first.src = getSrc(heroSlides[0]);
-  
+
     const preloadRemaining = () => {
       heroSlides.slice(1).forEach((s) => {
         const img = new Image();
         img.src = getSrc(s);
       });
     };
-  
+
     if ("requestIdleCallback" in window) {
       window.requestIdleCallback(preloadRemaining);
     } else {
@@ -710,27 +706,27 @@ export default function NAMYWebsite() {
       {/* ---------------- HERO ---------------- */}
       <section
         id="hero"
-        className="relative overflow-hidden pt-40 pb-28 md:pt-48 md:pb-36"
+        className="relative overflow-hidden pt-28 pb-14 md:pt-48 md:pb-36"
       >
         {/* Background image */}
-<div className="absolute inset-0">
-  {heroSlides.map((item, index) => (
-    <picture key={item.image}>
-      <source media="(max-width: 767px)" srcSet={item.mobileImage} />
-      <img
-        src={item.image}
-        alt=""
-        aria-hidden="true"
-        className={`namy-hero-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-          index === currentSlide ? "opacity-100" : "opacity-0"
-        }`}
-        loading={index === 0 ? "eager" : "lazy"}
-        fetchPriority={index === 0 ? "high" : "auto"}
-        decoding="async"
-      />
-    </picture>
-  ))}
-</div>
+        <div className="absolute inset-0">
+          {heroSlides.map((item, index) => (
+            <picture key={item.image}>
+              <source media="(max-width: 767px)" srcSet={item.mobileImage} />
+              <img
+                src={item.image}
+                alt=""
+                aria-hidden="true"
+                className={`namy-hero-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  index === currentSlide ? "opacity-100" : "opacity-0"
+                }`}
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
+                decoding="async"
+              />
+            </picture>
+          ))}
+        </div>
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 namy-grad-bg opacity-70" />
@@ -1621,7 +1617,7 @@ export default function NAMYWebsite() {
 
           <Reveal delay={120}>
             <div className="namy-surface rounded-3xl p-8">
-             <form onSubmit={sendMessage} className="space-y-4">
+              <form onSubmit={sendMessage} className="space-y-4">
                 <input
                   type="text"
                   name="name"
