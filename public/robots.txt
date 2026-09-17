@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.namyzambia.org/sitemap.xml
+Sitemap: https://namyzambia.org/sitemap.xml
