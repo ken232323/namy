@@ -340,12 +340,12 @@ function StatCard({ stat }) {
   const [ref, inView] = useReveal();
   const value = useCountUp(stat.value, inView);
   return (
-    <div ref={ref} className={`namy-reveal ${inView ? "namy-in-view" : ""}`}>
+    <div ref={ref} className={`namy-reveal ${inView ? "namy-in-view" : ""} text-center`}>
       <div className="namy-stat-number">
         {value}
         {stat.suffix}
       </div>
-      <div className="namy-muted text-sm md:text-base font-medium mt-1">
+      <div className="namy-muted text-sm md:text-base font-medium mt-2">
         {stat.label}
       </div>
     </div>
@@ -762,7 +762,7 @@ export default function NAMYWebsite() {
             </p>
           </Reveal>
           <Reveal delay={240}>
-            <div className="mt-20 mb-30 flex flex-wrap gap-3">
+            <div className="mt-12 flex flex-wrap gap-3">
               <button
                 onClick={() => scrollToId("contact")}
                 className="namy-btn-gold px-6 py-3.5 rounded-full text-sm font-semibold flex items-center gap-1.5"
@@ -795,7 +795,7 @@ export default function NAMYWebsite() {
       {/* ---------------- STATS ---------------- */}
       <section className="relative namy-surface-2 py-16 md:py-20 namy-border-b overflow-hidden">
         <DistrictNetwork className="absolute -left-16 -bottom-16 w-80 opacity-[0.08]" />
-        <div className="relative max-w-7xl mx-auto px-5 md:px-8 grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-6">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8 grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-8">
           {stats.map((s) => (
             <StatCard key={s.id ?? s.label} stat={s} />
           ))}
@@ -803,7 +803,7 @@ export default function NAMYWebsite() {
       </section>
 
       {/* ---------------- ABOUT ---------------- */}
-      <section id="about" className="py-24 md:py-32">
+      <section id="about" className="py-24 md:py-32 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* ================= IMAGE ================= */}
@@ -826,8 +826,8 @@ export default function NAMYWebsite() {
                   className="
               absolute
               bottom-6
-              right-[-12px]
-              md:right-[-20px]
+              right-0
+              md:right-[-16px]
               bg-white
               rounded-2xl
               shadow-xl
@@ -911,7 +911,10 @@ export default function NAMYWebsite() {
                 duration-300
               "
                   >
-                    <div className="text-xl mb-3">
+                    <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-3"
+                      style={{ backgroundColor: "rgba(11,79,140,0.1)" }}
+                    >
                       <Target size={20} style={{ color: "#0B4F8C" }} />
                     </div>
 
@@ -938,7 +941,10 @@ export default function NAMYWebsite() {
                 duration-300
               "
                   >
-                    <div className="text-xl mb-3">
+                    <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-3"
+                      style={{ backgroundColor: "rgba(11,79,140,0.1)" }}
+                    >
                       <HeartHandshake size={20} style={{ color: "#0B4F8C" }} />
                     </div>
 
@@ -965,7 +971,10 @@ export default function NAMYWebsite() {
                 duration-300
               "
                   >
-                    <div className="text-xl mb-3">
+                    <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-3"
+                      style={{ backgroundColor: "rgba(11,79,140,0.1)" }}
+                    >
                       <Lightbulb size={20} style={{ color: "#0B4F8C" }} />
                     </div>
 
@@ -992,7 +1001,10 @@ export default function NAMYWebsite() {
                 duration-300
               "
                   >
-                    <div className="text-xl mb-3">
+                    <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-3"
+                      style={{ backgroundColor: "rgba(11,79,140,0.1)" }}
+                    >
                       <Globe2 size={20} style={{ color: "#0B4F8C" }} />
                     </div>
 
@@ -1017,7 +1029,7 @@ export default function NAMYWebsite() {
               gap-2
               px-6
               py-3
-              rounded-lg
+              rounded-full
               text-sm
               font-semibold
               text-white
@@ -1036,7 +1048,7 @@ export default function NAMYWebsite() {
       </section>
 
       {/* ---------------- VISION & MISSION ---------------- */}
-      <section id="vision" className="py-24 md:py-32">
+      <section id="vision" className="py-24 md:py-32 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="max-w-2xl mx-auto text-center mb-14">
             <SectionEyebrow>Our Purpose</SectionEyebrow>
@@ -1095,7 +1107,7 @@ export default function NAMYWebsite() {
       {/* ---------------- LEADERSHIP ---------------- */}
       <section
         id="leadership"
-        className="py-24 md:py-32 namy-surface-2 namy-border-t namy-border-b"
+        className="py-24 md:py-32 namy-surface-2 namy-border-t namy-border-b scroll-mt-24"
       >
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="max-w-2xl mx-auto text-center mb-14">
@@ -1157,9 +1169,9 @@ export default function NAMYWebsite() {
       </section>
 
       {/* ---------------- PROGRAMS ---------------- */}
-      <section id="programs" className="py-24 md:py-32 namy-border-b">
+      <section id="programs" className="py-24 md:py-32 namy-border-b scroll-mt-24">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
-          <Reveal className="max-w-2xl mx-auto text-center">
+          <Reveal className="max-w-2xl mx-auto text-center mb-14">
             <SectionEyebrow>What We Do</SectionEyebrow>
             <h2 className="namy-display font-bold text-3xl md:text-[2.6rem] tracking-tight">
               Twelve programmes. One movement.
@@ -1171,7 +1183,7 @@ export default function NAMYWebsite() {
             </p>
           </Reveal>
 
-          <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {PROGRAMS.map((p, i) => (
               <Reveal key={p.title} delay={(i % 3) * 90}>
                 <div className="namy-card namy-surface rounded-2xl p-6 h-full">
@@ -1193,7 +1205,7 @@ export default function NAMYWebsite() {
       </section>
 
       {/* ---------------- INNOVATION HUB ---------------- */}
-      <section id="innovation" className="py-24 md:py-32">
+      <section id="innovation" className="py-24 md:py-32 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
             <div>
@@ -1288,7 +1300,7 @@ export default function NAMYWebsite() {
       {/* ---------------- SEMINARS ---------------- */}
       <section
         id="seminars"
-        className="py-24 md:py-32 namy-surface-2 namy-border-t namy-border-b"
+        className="py-24 md:py-32 namy-surface-2 namy-border-t namy-border-b scroll-mt-24"
       >
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
@@ -1364,7 +1376,7 @@ export default function NAMYWebsite() {
       </section>
 
       {/* ---------------- WORKSHOPS ---------------- */}
-      <section id="workshops" className="py-24 md:py-32">
+      <section id="workshops" className="py-24 md:py-32 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
             <div>
@@ -1442,7 +1454,7 @@ export default function NAMYWebsite() {
       {/* ---------------- NEWS ---------------- */}
       <section
         id="news"
-        className="py-24 md:py-32 namy-surface-2 namy-border-t namy-border-b"
+        className="py-24 md:py-32 namy-surface-2 namy-border-t namy-border-b scroll-mt-24"
       >
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="max-w-2xl mb-14">
@@ -1500,7 +1512,7 @@ export default function NAMYWebsite() {
                 <img
                   src={p}
                   alt=""
-                  className="w-20 h-10 md:w-80 md:h-40 object-contain"
+                  className="w-28 h-14 md:w-52 md:h-24 object-contain"
                 />
               </span>
             ))}
@@ -1539,7 +1551,7 @@ export default function NAMYWebsite() {
       </section>
 
       {/* ---------------- CONTACT ---------------- */}
-      <section id="contact" className="py-24 md:py-32">
+      <section id="contact" className="py-24 md:py-32 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-14">
           <Reveal>
             <SectionEyebrow>Contact</SectionEyebrow>
@@ -1572,7 +1584,7 @@ export default function NAMYWebsite() {
                 href="https://www.facebook.com/profile.php?id=100081784870933"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
+                className="w-10 h-10 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
               >
                 <FaFacebookF size={15} />
               </a>
@@ -1581,7 +1593,7 @@ export default function NAMYWebsite() {
                 href="https://www.instagram.com/YOUR_USERNAME"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
+                className="w-10 h-10 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
               >
                 <FaInstagram size={15} />
               </a>
@@ -1590,7 +1602,7 @@ export default function NAMYWebsite() {
                 href="https://chat.whatsapp.com/DWVOURGUhS51G07PvkyGM8"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
+                className="w-10 h-10 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
               >
                 <FaWhatsapp size={15} />
               </a>
@@ -1599,7 +1611,7 @@ export default function NAMYWebsite() {
                 href="https://www.youtube.com/@YOUR_CHANNEL"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
+                className="w-10 h-10 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
               >
                 <FaYoutube size={15} />
               </a>
@@ -1608,7 +1620,7 @@ export default function NAMYWebsite() {
                 href="https://x.com/YOUR_USERNAME"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
+                className="w-10 h-10 rounded-full namy-surface flex items-center justify-center cursor-pointer hover:opacity-70"
               >
                 <FaXTwitter size={15} />
               </a>
