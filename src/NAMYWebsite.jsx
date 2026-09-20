@@ -609,8 +609,30 @@ export default function NAMYWebsite() {
         .namy-btn-gold { background-color: #F4B400; color: #0F172A; }
         .namy-btn-gold:hover { filter: brightness(1.06); }
         .namy-scrollbar-none::-webkit-scrollbar { display: none; }
+        .namy-lab-wash {
+          background-image:
+            radial-gradient(58% 55% at 85% 10%, rgba(244,180,0,0.09), transparent 62%),
+            radial-gradient(55% 62% at 10% 90%, rgba(46,139,87,0.10), transparent 62%),
+            linear-gradient(115deg, rgba(11,79,140,0.05) 0%, transparent 48%, rgba(46,139,87,0.05) 100%);
+        }
+        .namy-lab-title {
+          background-image: linear-gradient(120deg, #0B4F8C 0%, #2E8B57 100%);
+          -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .namy-lab-card { position: relative; transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s ease; }
+        .namy-lab-card::before {
+          content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+          background: linear-gradient(135deg, rgba(244,180,0,.6), rgba(46,139,87,.45) 40%, transparent 72%);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor; mask-composite: exclude;
+          opacity: 0; transition: opacity .35s ease; pointer-events: none;
+        }
+        .namy-lab-card:hover { transform: translateY(-8px); box-shadow: 0 30px 55px -26px rgba(11,79,140,0.45); }
+        .namy-lab-card:hover::before { opacity: 1; }
+        @keyframes namyPing { 0% { transform: scale(1); opacity: .7; } 80%,100% { transform: scale(2.5); opacity: 0; } }
+        .namy-ping { animation: namyPing 2.2s cubic-bezier(0,0,.2,1) infinite; }
         @media (prefers-reduced-motion: reduce) {
-          .namy-float, .namy-float-slow, .namy-pulse-dot { animation: none !important; }
+          .namy-float, .namy-float-slow, .namy-pulse-dot, .namy-ping { animation: none !important; }
           .namy-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
           .namy-card:hover { transform: none; }
         }
@@ -1219,23 +1241,44 @@ export default function NAMYWebsite() {
       </section>
 
       {/* ---------------- INNOVATION HUB ---------------- */}
-      <section id="innovation" className="py-24 md:py-32 scroll-mt-24">
-        <div className="max-w-7xl mx-auto px-5 md:px-8">
+      <section
+        id="innovation"
+        className="relative py-24 md:py-32 scroll-mt-24 overflow-hidden"
+      >
+        <div className="absolute inset-0 namy-lab-wash pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8">
           <Reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <img
-                  src={namylabs}
-                  alt="NAMY"
-                  className="w-10 h-10 md:w-20 md:h-12 object-contain"
-                />
-
-                <span
-                  className="namy-display font-bold text-md md:text-xl tracking-[0.12em] uppercase"
-                  style={{ color: "#0B4F8C" }}
-                >
-                  NAMY LABS
-                </span>
+                <div className="relative shrink-0">
+                  <div className="absolute -inset-1.5 rounded-full bg-[#F4B400]/25 blur-md" />
+                  <img
+                    src={namylabs}
+                    alt="NAMY"
+                    className="relative w-10 h-10 md:w-20 md:h-12 object-contain"
+                  />
+                </div>
+                <div>
+                  <span className="namy-lab-title namy-display font-bold text-md md:text-xl tracking-[0.12em] uppercase">
+                    NAMY LABS
+                  </span>
+                  <span
+                    className="flex items-center gap-2 text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.16em] mt-1"
+                    style={{ color: "#2E8B57" }}
+                  >
+                    <span className="relative flex h-2 w-2">
+                      <span
+                        className="namy-ping absolute inline-flex h-full w-full rounded-full"
+                        style={{ backgroundColor: "#2E8B57" }}
+                      />
+                      <span
+                        className="relative inline-flex rounded-full h-2 w-2"
+                        style={{ backgroundColor: "#F4B400" }}
+                      />
+                    </span>
+                    Innovation Hub
+                  </span>
+                </div>
               </div>
               <h2 className="namy-display font-bold text-3xl md:text-[2.6rem] tracking-tight max-w-xl">
                 From district workshops to working prototypes.
@@ -1257,7 +1300,7 @@ export default function NAMYWebsite() {
             ) : (
               projects.map((proj, i) => (
                 <Reveal key={proj.id ?? proj.title} delay={i * 100}>
-                  <div className="namy-card namy-surface rounded-2xl overflow-hidden h-full flex flex-col">
+                  <div className="namy-lab-card namy-surface rounded-2xl overflow-hidden h-full flex flex-col">
                     <div
                       className="h-40 relative flex items-end p-5"
                       style={
