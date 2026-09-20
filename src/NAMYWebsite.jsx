@@ -1129,39 +1129,53 @@ export default function NAMYWebsite() {
             ) : (
               leadership.map((leader, i) => (
                 <Reveal key={leader.id ?? leader.name} delay={(i % 3) * 90}>
-                  <div className="namy-card namy-surface rounded-2xl p-6 text-center h-full">
-                    <div className="w-20 h-20 rounded-full mx-auto mb-4 overflow-hidden namy-surface-2 flex items-center justify-center">
-                      {leader.photoUrl ? (
-                        <img
-                          src={leader.photoUrl}
-                          alt={leader.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span
-                          className="namy-display font-bold text-lg"
-                          style={{ color: "#0B4F8C" }}
-                        >
-                          {initials(leader.name)}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="namy-display font-semibold text-base mb-1">
-                      {leader.name}
-                    </h3>
-                    <p
-                      className="text-xs font-semibold mb-3"
-                      style={{ color: "#2E8B57" }}
+                  <div className="namy-card namy-surface rounded-2xl p-6 h-full flex flex-col">
+
+                 {/* Profile Image */}
+                 <div className="w-40 h-40 rounded-4xl mx-auto mb-5 overflow-hidden namy-surface-2 flex items-center justify-center">
+                  {leader.photoUrl ? (
+                    <img
+                       src={leader.photoUrl}
+                       alt={leader.name}
+                       className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span
+                      className="namy-display font-bold text-lg"
+                      style={{ color: "#0B4F8C" }}
                     >
-                      {leader.position}
-                    </p>
-                    {leader.bio && (
-                      <p className="namy-muted text-sm leading-relaxed">
-                        {leader.bio}
-                      </p>
-                    )}
-                  </div>
-                </Reveal>
+                    {initials(leader.name)}
+                  </span>
+                  )}
+                </div>
+
+                  {/* Name */}
+                <h3 className="namy-display font-semibold text-lg text-center mb-1">
+                  {leader.name}
+                </h3>
+
+                {/* Position */}
+                <p
+                  className="text-sm font-semibold text-center leading-snug min-h-[40px] flex items-center justify-center"
+                  style={{ color: "#2E8B57" }}
+                >
+                  {leader.position}
+                </p>
+
+                {/* Divider */}
+                <div className="w-12 h-px bg-gray-200 mx-auto my-4" />
+
+                {/* Bio */}
+                {leader.bio && (
+                <div className="flex-1">
+                  <p className="namy-muted text-sm leading-7 text-left">
+                    {leader.bio}
+                  </p>
+                </div>
+              )}
+
+            </div>
+            </Reveal>  
               ))
             )}
           </div>
